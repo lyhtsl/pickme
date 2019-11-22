@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+
+		<script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=wqBXfIN3HkpM1AHKWujjCdsi"></script>
+		<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+
+		<style>
+			* {
+		  margin: 0;
+		  padding: 0;
+		}
+		.a{
+			width:100%;
+			height:20%;
+			line-height:20%;
+			background-color:rgba(193,205,193,0.3);
+			border:1.5rpx solid #CDC9C9;
+			text-align:center;
+			font:normal normal 180% "Comic Sans MS";
+		}
+		.b{
+			width:88%;
+			height:20%;
+			line-height:20%;
+			background-color:white;
+			border:1.5rpx solid #8B8989;
+			text-align:center;
+			font:normal normal 180% "微软雅黑";
+		}
+		.back{
+			width:14%;
+			height:20%;
+			line-height:20%;
+			background-color:white;
+			border:0 solid white;
+			text-align:center;
+			font:normal bold 200% "幼圆";
+			float:left;
+			}
+		.c{
+			width:15%;
+			height:123px;
+			line-height:123px;
+			background-color:white;
+			border:0.75px solid 	#CDC9C9;
+			text-align:center;
+			font:normal normal 30px "微软雅黑";
+			float:left;
+		}
+		.all{
+			width:84.1%;
+			height:40px;
+			line-height:40px;
+			color:#838B83;
+			background-color:white;
+			border:0.75px solid #8B8989;
+			text-align:center;
+			font:normal normal 18px "微软雅黑";
+			float:left;
+		}
+		.receipt{
+			width:100%;
+			height:50px;
+			line-height:50px;
+			background-color:rgba(255,127,36,1);
+			color:white;
+			border:0 solid #8B8989;
+			text-align:center;
+			font:normal normal 20px "微软雅黑";
+			float:left;
+			border-radius:8px;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div class="a">pick me</div>
+		<button class="back" type="button" onclick="back()"><</button>
+		<div class="b">快车</div>
+		<div>
+			<form action="">
+				<div class="c"><br />①</div>
+				<div class="all" id ="name1"></div>
+				<div class="all" id ="start1"></div>
+				<div class="all" id ="end1"></div>
+				<button class="receipt" type="button" onclick="takeod0()">立即抢单</button>
+				
+			<form action="">
+				<div class="c"><br />②</div>
+				<div class="all" id ="name2"></div>
+				<div class="all" id ="start2"></div>
+				<div class="all" id ="end2"></div>
+				<button class="receipt" type="button" onclick="takeod1()">立即抢单</button>
+				
+			<form action="">
+				<div class="c"><br />③</div>
+				<div class="all" id ="name3"></div>
+				<div class="all" id ="start3"></div>
+				<div class="all" id ="end3"></div>
+				<button class="receipt" type="button" onclick="takeod2()">立即抢单</button>
+			<form action="">
+				<div class="c"><br />④</div>
+				<div class="all" id ="name4"></div>
+				<div class="all" id ="start4"></div>
+				<div class="all" id ="end4"></div>
+				<button class="receipt" type="button" onclick="takeod3()">立即抢单</button>
+			<form action="">
+				<div class="c"><br />⑤</div>
+				<div class="all" id ="name5"></div>
+				<div class="all" id ="start5"></div>
+				<div class="all" id ="end5"></div>
+				<button class="receipt" type="button" onclick="takeod4()">立即抢单</button>
+		</div>
+		<script>
+			function back(){
+				window.location.href='homepage.html';
+			}
+		</script>
+		<script>
+			var oidd = [];
+			getfreecardata();
+			function getfreecardata(){
+				var d = new Date();
+				var q = d.toLocaleDateString();
+				var h = d.getHours();
+				var m = d.getMinutes();
+				var s = d.getSeconds();
+				var t1 = h+':'+m+':'+s;
+				d.setMinutes (d.getMinutes () - 120);
+				var h1 = d.getHours();
+				var m1 = d.getMinutes();
+				var s1 = d.getSeconds();
+				var t2 = h1+':'+m1+':'+s1;
+				$.ajax({
+				    type: 'GET',
+				    url: 'http://127.0.0.1/driver/twc/data',
+				        //dataType:'jsonp',
+					data:{
+						order:1,
+						date:q,
+						time1:t2,
+						time2:t1
+					},
+				    success: function(data){
+				        var reslutData=data;
+				        console.log(reslutData);  
+						var data =JSON.parse(data);
+						$('#name1').text(data["data"][0]["name"]);
+						$('#start1').text(data["data"][0]["startpoint"]);
+						$('#end1').text(data["data"][0]["endpoint"]);
+						oidd.push(data["data"][0]["oid"]);
+						$('#name2').text(data["data"][1]["name"]);
+						$('#start2').text(data["data"][1]["startpoint"]);
+						$('#end2').text(data["data"][1]["endpoint"]);
+						oidd.push(data["data"][1]["oid"]);
+						$('#name3').text(data["data"][2]["name"]);
+						$('#start3').text(data["data"][2]["startpoint"]);
+						$('#end3').text(data["data"][2]["endpoint"]);
+						oidd.push(data["data"][2]["oid"]);
+						$('#name4').text(data["data"][3]["name"]);
+						$('#start4').text(data["data"][3]["startpoint"]);
+						$('#end4').text(data["data"][3]["endpoint"]);
+						oidd.push(data["data"][3]["oid"]);
+						$('#name5').text(data["data"][4]["name"]);
+						$('#start5').text(data["data"][4]["startpoint"]);
+						$('#end5').text(data["data"][4]["endpoint"]);
+						oidd.push(data["data"][4]["oid"]);
+						//document.write(p);
+				           
+				    }             
+				})
+				
+					
+			
+			}
+			function takeod0(){
+					var $oid =oidd[0] ;
+			        $.ajax({
+			            type: 'GET',
+			            url: 'http://127.0.0.1/driver/quikcar/tkod',				
+						data:{
+							oid: $oid,
+							user: '2'
+						},
+			            success: function(data){
+			                var reslutData=data;
+			                console.log(reslutData);    
+			                //$('#reslut1').text(data["msg"]);
+							data=JSON.parse(data);
+							if(data["status"]==0){
+								console.log('接单成功')
+								//跳转订单进行页面
+								localStorage.setItem('pdata',JSON.stringify(data["data"]));
+								//var d = localStorage.pdata;
+								//console.log(d)s
+							}else{
+								console.log('接单失败')
+							}
+							}
+			                         
+			        })
+					} 
+					
+				function takeod1(){
+					var $oid = oidd[1];
+			        $.ajax({
+			            type: 'GET',
+			            url: 'http://127.0.0.1/driver/quikcar/tkod',				
+						data:{
+							oid: $oid,
+							user: '2'
+						},
+			            success: function(data){
+			                var reslutData=data;
+			                console.log(reslutData);    
+			                //$('#reslut1').text(data["msg"]);
+							data=JSON.parse(data);
+							if(data["status"]==0){
+								console.log('接单成功')
+								//跳转订单进行页面
+								localStorage.setItem('pdata',JSON.stringify(data["data"]));
+								//var d = localStorage.pdata;
+								//console.log(d)
+							}else{
+								console.log('接单失败')
+							}
+							}
+			                         
+			        })
+					} 
+			   function takeod2(){
+					var $oid = oidd[2];
+			        $.ajax({
+			            type: 'GET',
+			            url: 'http://127.0.0.1/driver/quikcar/tkod',				
+						data:{
+							oid: $oid,
+							user: '2'
+						},
+			            success: function(data){
+			                var reslutData=data;
+			                console.log(reslutData);    
+			                //$('#reslut1').text(data["msg"]);
+							data=JSON.parse(data);
+							if(data["status"]==0){
+								console.log('接单成功')
+								//跳转订单进行页面
+								localStorage.setItem('pdata',JSON.stringify(data["data"]));
+								//var d = localStorage.pdata;
+								//console.log(d)
+							}else{
+								console.log('接单失败')
+							}
+							}
+			                         
+			        })
+					} 
+				function takeod3(){
+					var $oid = oidd[3];
+			        $.ajax({
+			            type: 'GET',
+			            url: 'http://127.0.0.1/driver/quikcar/tkod',				
+						data:{
+							oid: $oid,
+							user: '2'
+						},
+			            success: function(data){
+			                var reslutData=data;
+			                console.log(reslutData);    
+			                //$('#reslut1').text(data["msg"]);
+							data=JSON.parse(data);
+							if(data["status"]==0){
+								console.log('接单成功')
+								//跳转订单进行页面
+								localStorage.setItem('pdata',JSON.stringify(data["data"]));
+								//var d = localStorage.pdata;
+								//console.log(d)
+							}else{
+								console.log('接单失败')
+							}
+							}
+			                         
+			        })
+					} 
+				function takeod4(){
+					var $oid = oidd[4];
+			        $.ajax({
+			            type: 'GET',
+			            url: 'http://127.0.0.1/driver/quikcar/tkod',				
+						data:{
+							oid: $oid,
+							user: '2'
+						},
+			            success: function(data){
+			                var reslutData=data;
+			                console.log(reslutData);    
+			                //$('#reslut1').text(data["msg"]);
+							data=JSON.parse(data);
+							if(data["status"]==0){
+								console.log('接单成功')
+								//跳转订单进行页面
+								localStorage.setItem('pdata',JSON.stringify(data["data"]));
+								//var d = localStorage.pdata;
+								//console.log(d)
+							}else{
+								console.log('接单失败')
+							}
+							}
+			                         
+			        })
+					} 
+		</script>
+		
+	</body>
+</html>
