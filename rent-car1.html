@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+
+		<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script> -->
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=wqBXfIN3HkpM1AHKWujjCdsi"></script>
+		<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+
+		<style>
+			* {
+		  margin: 0;
+		  padding: 0;
+		}
+		.a{
+			width:100%;
+			height:20%;
+			line-height:20%;
+			background-color:rgba(193,205,193,0.3);
+			border:1.5rpx solid #CDC9C9;
+			text-align:center;
+			font:normal normal 180% "Comic Sans MS";
+		}
+		.b{
+			width:88%;
+			height:20%;
+			line-height:20%;
+			background-color:white;
+			border:1.5rpx solid #8B8989;
+			text-align:center;
+			font:normal normal 180% "微软雅黑";
+		}
+		.back{
+			width:14%;
+			height:20%;
+			line-height:20%;
+			background-color:white;
+			border:0 solid white;
+			text-align:center;
+			font:normal bold 200% "幼圆";
+			float:left;
+			}
+		.c{
+			width:34%;
+			height:40px;
+			line-height:40px;
+			color:rgba(0,0,0,0.7);
+			background-color:white;
+			border:0.05px solid #8B8989;
+			text-align:center;
+			font:normal normal 23px "微软雅黑";
+			float:left;
+		}
+		.all{
+			width:65.9%;
+			height:40px;
+			line-height:40px;
+			color:#838B83;
+			background-color:white;
+			border:0.05px solid #8B8989;
+			text-align:center;
+			font:normal normal 23px "微软雅黑";
+			float:left;
+		}
+		.callmaster{
+			width:50%;
+			height:40px;
+			line-height:40px;
+			background-color:rgba(255,255,255,100);
+			color:black;
+			border:0.150.15px solid #8B8989;
+			text-align:center;
+			padding-left: 20px;
+			font:normal normal 23px "微软雅黑";
+			float:left;
+			border-radius:10px;
+			background-color: #1B791A;
+		}
+		.call{
+			width:50%;
+			height:40px;
+			line-height:40px;
+			background-color:rgba(255,127,36,1);
+			color:white;
+			border:0.15px solid #8B8989;
+			text-align:center;
+			font:normal normal 23px "微软雅黑";
+			float:left;
+			border-radius:10px;
+		}
+		.allok3{
+			width:50%;
+			height:43px;
+			line-height:43px;
+			color:black;
+			background-color:white;
+			border:0.15px solid #8B8989;
+			text-align:center;
+			font:normal normal 23px "微软雅黑";
+			float:left;
+			background-color:#E4E8FF;
+		}
+		.allok{
+			width:50%;
+			height:43px;
+			line-height:43px;
+			color:black;
+			background-color:white;
+			border:0.15px solid #8B8989;
+			text-align:center;
+			font:normal normal 23px "微软雅黑";
+			float:left;
+		}
+        #container{  
+            width:100%;  
+            height: 1164px;  
+        }
+		
+		.clear{
+			clear:both;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div class="a">pick me</div>
+		<button class="back" type="button" onclick="back()"><</button>
+		<div class="b">短租车</div>
+		<form action="">
+			<input class="allok3" type="button" name="now" value="我要租车">
+			<input class="allok" type="button" name="now" value="我正在租" onclick="another()">
+		<form action="">
+			<div class="c">车型</div>
+			<input class="all" type="text" name="now" value="2019/8/27">
+			<div class="c">车辆现地址</div>
+			<input class="all" type="text" name="go" value="2019/8/30">
+			<input class="callmaster" type="submit" value="联系车主">
+			<input class="call" type="submit" value="我要租车">
+			<div class="c">车型</div>
+			<input class="all" type="text" name="now" value="2019/8/27">
+			<div class="c">车辆现地址</div>
+			<input class="all" type="text" name="go" value="2019/8/30">
+			<input class="callmaster" type="submit" value="联系车主">
+			<input class="call" type="submit" value="我要租车">
+			<div class="c">车型</div>
+			<input class="all" type="text" name="now" value="2019/8/27">
+			<div class="c">车辆现地址</div>
+			<input class="all" type="text" name="go" value="2019/8/30">
+			<input class="callmaster" type="submit" value="联系车主">
+			<input class="call" type="submit" value="我要租车">
+			<div class="clear"></div>
+		<div id="container"></div>
+		<script src="../public/js/jquery-3.0.0.min.js"></script>
+		<script src="http://webapi.amap.com/maps?v=1.4.0&amp;key=88677a1eeae5f527e0cbf0d0a537de11&callback=init"></script>
+		<script>
+		    function init(){
+		        var map, geolocation;
+		//        实例化地图
+		        var map = new AMap.Map('container', {
+		//            resizeEnable: true,
+		        });
+		//        配置插件AMap.Geolocation
+		        map.plugin('AMap.Geolocation', function () {
+		            geolocation = new AMap.Geolocation({
+		                enableHighAccuracy: false,//是否使用高精度定位，默认:true
+		                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+		                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+		                convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+		                showButton: true,        //显示定位按钮，默认：true
+		                buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+		                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+		                showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+		                showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+		                panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+		                zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+		            });
+		            map.addControl(geolocation);
+		            geolocation.getCurrentPosition();
+		            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+		            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+		//  把当前的位置信息放到页面中
+		            function onComplete(data) {
+		               $('#container').html(data.formattedAddress)
+		            }
+		//            如果报错把报错信息输出
+		            function onError(data) {
+		                console.log(data)
+		            }
+		
+		        });
+		
+		    }
+			function another(){
+				window.location.href='rent-car11.html';
+			}
+			function back(){
+				window.location.href='homepage.html';
+			}
+		</script>
+	</body>
+</html>
