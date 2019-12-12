@@ -61,6 +61,36 @@ order_number = 1
 # 反馈实时位置
 # 查询订单状态
 
+#查询订单记录（type为0是租客，为1是车主）
+@app.route('/users/record')
+def getusers_record():
+    username = request.args.get('user')
+    type = request.args.get('type')
+    my = PYSQL('127.0.0.1', 'sa', 'lin123456.', 'pickme')
+    data = []
+    if int(type) == 0:
+        sql = "SELECT * FROM orders WHERE susername = '{}' ORDER BY orderid DESC".format(username)
+        data1 = my.select_data(sql)
+        for vi in data1:
+            data2 = {"oid": vi[0], "duser": vi[2], "fast_car": vi[3], "free_car": vi[4], "rent_car": vi[5], "finish": vi[6], "saddress": vi[7], "eaddress": vi[8], "sdate": vi[9], "stime": vi[10], "edate": vi[11], "etime": vi[12], "price": vi[13], "cycle": vi[14]}
+            data.append(data2)
+
+    else:
+        sql = "SELECT * FROM orders WHERE dusername = '{}' ORDER BY orderid DESC".format(username)
+        data1 = my.select_data(sql)
+        for vi in data1:
+            data2 = {"oid": vi[0], "suser": vi[1], "fast_car": vi[3], "free_car": vi[4], "rent_car": vi[5],
+                     "finish": vi[6], "saddress": vi[7], "eaddress": vi[8], "sdate": vi[9], "stime": vi[10],
+                     "edate": vi[11], "etime": vi[12], "price": vi[13], "cycle": vi[14]}
+            data.append(data2)
+    status = 0
+    res = {
+        "status": status,
+        "data": data
+        }
+    my.close()
+    return json.dumps(res, ensure_ascii=False)
+
 #短租车查询未完成订单（type为0是租客，为1是车主）
 @app.route('/rentcar/finish')
 def getRentcar_finish():
@@ -355,7 +385,7 @@ def getTwc_data():
     '''
     if order[0] =='1':
         my = PYSQL('127.0.0.1', 'sa', 'lin123456.', 'pickme')
-        sql = "SELECT orderid,susername,startpoint,endpoint FROM orders WHERE dusername is NULL AND fast_car = 1 AND  sdate = '{}' AND stime BETWEEN '{}' AND '{}'".format(
+        sql = "SELECT orderid,susername,startpoint,endpoint, price FROM orders WHERE dusername is NULL AND fast_car = 1 AND  sdate = '{}' AND stime BETWEEN '{}' AND '{}'".format(
             date, time1, time2)
         data1 = my.select_data(sql)
         for vi in data1:
@@ -363,12 +393,12 @@ def getTwc_data():
             sql = "SELECT sname ,ssex,year(getdate())-year(sbirth)FROM student WHERE susername = '{}'".format(susername)
             data2 = my.select_data(sql)
             data3 = data2[0]
-            data4 = {"oid": vi[0], "startpoint": vi[2], "endpoint": vi[3], "name": data3[0], "sex": data3[1],
+            data4 = {"oid": vi[0], "startpoint": vi[2], "endpoint": vi[3], "price":vi[4], "name": data3[0], "sex": data3[1],
                      "age": data3[2]}
             data.append(data4)
     else:
         my = PYSQL('127.0.0.1', 'sa', 'lin123456.', 'pickme')
-        sql = "SELECT orderid,susername,startpoint,endpoint FROM orders WHERE dusername is NULL AND free_ride = 1 AND  sdate = '{}' AND stime BETWEEN '{}' AND '{}'".format(
+        sql = "SELECT orderid,susername,startpoint,endpoint ,price FROM orders WHERE dusername is NULL AND free_ride = 1 AND  sdate = '{}' AND stime BETWEEN '{}' AND '{}'".format(
             date, time1, time2)
         data1 = my.select_data(sql)
         for vi in data1:
@@ -376,7 +406,7 @@ def getTwc_data():
             sql = "SELECT sname ,ssex,year(getdate())-year(sbirth)FROM student WHERE susername = '{}'".format(susername)
             data2 = my.select_data(sql)
             data3 = data2[0]
-            data4 = {"oid": vi[0], "startpoint": vi[2], "endpoint": vi[3], "name": data3[0], "sex": data3[1],
+            data4 = {"oid": vi[0], "startpoint": vi[2], "endpoint": vi[3], "price": vi[4], "name": data3[0], "sex": data3[1],
                      "age": data3[2]}
             data.append(data4)
     res = {
